@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: s3browser-server
+  labels:
+    app.kubernetes.io/name: s3browser
+    app.kubernetes.io/component: server
+
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: s3browser
+      app.kubernetes.io/component: server
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: s3browser
+        app.kubernetes.io/component: server
+
+    spec:
+      enableServiceLinks: false
+
+      containers:
+        - name: server
+          image: s3browser-server
+          imagePullPolicy: IfNotPresent
+
+          envFrom:
+            - configMapRef:
+                name: s3browser-server
+            - secretRef:
+                name: s3browser-server
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+
+...

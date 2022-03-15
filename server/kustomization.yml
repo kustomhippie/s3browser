@@ -1,0 +1,30 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - service.yml
+  - deployment.yml
+
+configMapGenerator:
+  - name: s3browser-server
+    options:
+      labels:
+        app.kubernetes.io/name: s3browser
+        app.kubernetes.io/component: server
+    literals: []
+
+secretGenerator:
+  - name: s3browser-server
+    options:
+      labels:
+        app.kubernetes.io/name: s3browser
+        app.kubernetes.io/component: server
+    literals: []
+
+images:
+  - name: s3browser-server
+    newName: techknowlogick/caddy-s3browser
+    newTag: "latest"
+
+...
